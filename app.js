@@ -1,1129 +1,938 @@
-const WHATSAPP = "923471016620";
+"use strict";
 
-const PAYMENTS = {
-  easypaisa: "03420604105",
-  jazzcash: "03174453242"
-};
+/* NOVA AI — Frontend Tool Engine
+   Payment verification and account security require a backend.
+*/
 
 const tools = [
-  {id:"qr",name:"URL to QR Generator",icon:"▦",cat:"Marketing",desc:"Turn website links into downloadable QR codes with optional logo.",price:799,kind:"qr"},
-  {id:"barcode",name:"Barcode Generator",icon:"▥",cat:"Business",desc:"Create product barcodes and download printable SVG files.",price:699,kind:"barcode"},
-  {id:"image",name:"Image Compressor",icon:"▧",cat:"Image",desc:"Reduce image file size directly in your browser.",price:899,kind:"image"},
-  {id:"resize",name:"Image Resizer",icon:"◫",cat:"Image",desc:"Resize images to custom pixel dimensions.",price:699,kind:"image"},
-  {id:"invoice",name:"Invoice Generator Pro",icon:"▤",cat:"Business",desc:"Create clean business invoices ready to print or save as PDF.",price:999,kind:"invoice"},
-  {id:"resume",name:"Resume Builder",icon:"▣",cat:"Business",desc:"Build a professional resume from your details.",price:1299,kind:"resume"},
-  {id:"pdf",name:"PDF Merge Studio",icon:"▧",cat:"Documents",desc:"Combine multiple PDF files into one document in your browser.",price:999,kind:"pdf"},
-  {id:"thumbnail",name:"YouTube Thumbnail Maker",icon:"▶",cat:"Creator",desc:"Design a custom thumbnail with image, text and colors.",price:999,kind:"thumbnail"},
-  {id:"social",name:"Social Media Design Maker",icon:"✧",cat:"Creator",desc:"Create a square promotional graphic for social platforms.",price:1199,kind:"social"},
-  {id:"seo",name:"SEO Source Analyzer",icon:"⌕",cat:"Marketing",desc:"Check pasted page source for title, description and heading basics.",price:1299,kind:"seo"},
-  {id:"favicon",name:"Favicon Maker",icon:"◈",cat:"Design",desc:"Create a simple downloadable website icon from text or emoji.",price:599,kind:"favicon"},
-  {id:"word",name:"Word Counter Pro",icon:"¶",cat:"Writing",desc:"Count words, characters, sentences and reading time.",price:599,kind:"word"},
-  {id:"case",name:"Text Case Converter",icon:"Aa",cat:"Writing",desc:"Convert text to upper, lower, title and sentence case.",price:599,kind:"case"},
-  {id:"json",name:"JSON Formatter",icon:"{}",cat:"Developer",desc:"Format, validate and inspect JSON data.",price:599,kind:"json"},
-  {id:"password",name:"Password Generator",icon:"⌑",cat:"Security",desc:"Generate random passwords locally in your browser.",price:699,kind:"password"},
-  {id:"calc",name:"Smart Calculator",icon:"＋",cat:"Utility",desc:"Calculate common arithmetic expressions.",price:599,kind:"calc"},
-  {id:"percent",name:"Percentage Calculator",icon:"％",cat:"Utility",desc:"Calculate percentages and percentage amounts.",price:599,kind:"percent"},
-  {id:"color",name:"Color Studio",icon:"◉",cat:"Design",desc:"Pick a color and get HEX and RGB values.",price:699,kind:"color"},
-  {id:"unit",name:"Unit Converter",icon:"⇄",cat:"Utility",desc:"Convert kilometers, miles, kilograms and pounds.",price:599,kind:"unit"},
-  {id:"notes",name:"Notes Exporter",icon:"▧",cat:"Productivity",desc:"Write notes and download them as a text file.",price:599,kind:"notes"},
-  {id:"binary",name:"Binary Converter",icon:"01",cat:"Developer",desc:"Convert text to binary and binary back to text.",price:699,kind:"binary"}
+  {id:"qr",name:"QR Code Generator",icon:"▦",category:"Business",price:799,desc:"Create QR codes from links or text.",kind:"qr"},
+  {id:"barcode",name:"Barcode Generator",icon:"▥",category:"Business",price:699,desc:"Generate printable barcodes.",kind:"barcode"},
+  {id:"compress",name:"Image Compressor",icon:"▧",category:"Images",price:899,desc:"Reduce image file size in your browser.",kind:"compress"},
+  {id:"resize",name:"Image Resizer",icon:"▣",category:"Images",price:699,desc:"Resize images to custom dimensions.",kind:"resize"},
+  {id:"invoice",name:"Invoice Generator Pro",icon:"▤",category:"Business",price:999,desc:"Create and print professional invoices.",kind:"invoice"},
+  {id:"resume",name:"Resume Builder",icon:"▧",category:"Writing",price:1299,desc:"Build a clean professional resume.",kind:"resume"},
+  {id:"pdf",name:"PDF Merge Studio",icon:"▦",category:"PDF",price:999,desc:"Combine multiple PDF files.",kind:"pdf"},
+  {id:"thumbnail",name:"YouTube Thumbnail Maker",icon:"▣",category:"Design",price:999,desc:"Create a thumbnail and download it.",kind:"thumbnail"},
+  {id:"social",name:"Social Media Design Maker",icon:"✦",category:"Design",price:1199,desc:"Design a simple social media graphic.",kind:"social"},
+  {id:"seo",name:"SEO Source Analyzer",icon:"⌕",category:"Business",price:1299,desc:"Check title, description and headings.",kind:"seo"},
+  {id:"favicon",name:"Favicon Maker",icon:"◈",category:"Design",price:599,desc:"Create a small icon from an image.",kind:"favicon"},
+  {id:"word",name:"Word Counter Pro",icon:"≡",category:"Writing",price:599,desc:"Count words, characters and sentences.",kind:"word"},
+  {id:"case",name:"Text Case Converter",icon:"Aa",category:"Writing",price:599,desc:"Convert text into different cases.",kind:"case"},
+  {id:"json",name:"JSON Formatter",icon:"{}",category:"Developer",price:599,desc:"Format and validate JSON data.",kind:"json"},
+  {id:"password",name:"Password Generator",icon:"⌑",category:"Developer",price:699,desc:"Generate random strong passwords.",kind:"password"},
+  {id:"calculator",name:"Smart Calculator",icon:"＋",category:"Business",price:599,desc:"Calculate everyday expressions.",kind:"calculator"},
+  {id:"percentage",name:"Percentage Calculator",icon:"％",category:"Business",price:599,desc:"Calculate percentages quickly.",kind:"percentage"},
+  {id:"color",name:"Color Studio",icon:"◉",category:"Design",price:699,desc:"Explore and copy color codes.",kind:"color"},
+  {id:"unit",name:"Unit Converter",icon:"⇄",category:"Business",price:599,desc:"Convert common measurements.",kind:"unit"},
+  {id:"notes",name:"Notes Exporter",icon:"▤",category:"Writing",price:599,desc:"Write notes and export as text.",kind:"notes"},
+  {id:"binary",name:"Binary Converter",icon:"01",category:"Developer",price:699,desc:"Convert text and binary values.",kind:"binary"},
+  {id:"planner",name:"Social Media Content Planner",icon:"▦",category:"Marketing",price:1000,desc:"Plan posts for your content calendar.",kind:"planner"},
+  {id:"listing",name:"Product Listing Writer",icon:"✎",category:"Marketing",price:800,desc:"Create product titles and descriptions.",kind:"listing"},
+  {id:"profit",name:"Profit Margin Calculator",icon:"％",category:"Business",price:700,desc:"Calculate profit, margin and markup.",kind:"profit"},
+  {id:"quotation",name:"Invoice & Quotation Pro",icon:"▤",category:"Business",price:800,desc:"Prepare a quotation for your customer.",kind:"quotation"},
+  {id:"caption",name:"Bio & Caption Writer",icon:"✦",category:"Marketing",price:700,desc:"Generate editable caption ideas.",kind:"caption"}
 ];
 
 let activeCategory = "All";
+let selectedTool = null;
 
-function money(n) {
-  return "Rs. " + Number(n).toLocaleString("en-PK");
+const $ = id => document.getElementById(id);
+const money = amount => "Rs. " + Number(amount).toLocaleString("en-PK");
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  })[char]);
 }
 
 function renderTools() {
-  const cats = ["All", ...new Set(tools.map(t => t.cat))];
+  const search = ($("search")?.value || "").toLowerCase();
 
-  document.getElementById("categories").innerHTML = cats.map(c =>
-    `<button class="cat ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
-  ).join("");
+  const filtered = tools.filter(tool => {
+    const categoryMatch = activeCategory === "All" || tool.category === activeCategory;
+    const searchMatch = (tool.name + " " + tool.desc + " " + tool.category)
+      .toLowerCase().includes(search);
+    return categoryMatch && searchMatch;
+  });
 
-  const q = document.getElementById("search").value.toLowerCase();
+  $("toolCount").textContent = filtered.length + " tools";
 
-  const list = tools.filter(t =>
-    (activeCategory === "All" || t.cat === activeCategory) &&
-    (t.name + " " + t.desc + " " + t.cat).toLowerCase().includes(q)
-  );
-
-  document.getElementById("toolGrid").innerHTML = list.map(t =>
-    `<article class="card">
-      <span class="badge">PREMIUM</span>
-      <div class="card-icon">${t.icon}</div>
-      <h3>${t.name}</h3>
-      <p>${t.desc}</p>
-      <div class="card-bottom">
-        <span class="price">${money(t.price)} / 60 days</span>
-        <button class="btn" onclick="handleTool('${t.id}')">View Tool →</button>
+  $("toolGrid").innerHTML = filtered.map(tool => `
+    <article class="tool-card">
+      <div class="tool-icon">${escapeHTML(tool.icon)}</div>
+      <h3>${escapeHTML(tool.name)}</h3>
+      <p>${escapeHTML(tool.desc)}</p>
+      <div class="tool-card-bottom">
+        <span class="tool-price">${money(tool.price)}</span>
+        <button class="tool-open" onclick="openTool('${tool.id}')">Open →</button>
       </div>
-    </article>`
-  ).join("");
+    </article>
+  `).join("") || "<p>No tools found.</p>";
 }
 
-function setCategory(c) {
-  activeCategory = c;
+function renderCategories() {
+  const categories = ["All", ...new Set(tools.map(tool => tool.category))];
+
+  $("categories").innerHTML = categories.map(category => `
+    <button class="category-btn ${activeCategory === category ? "active" : ""}"
+      onclick="setCategory('${category}')">${escapeHTML(category)}</button>
+  `).join("");
+}
+
+function setCategory(category) {
+  activeCategory = category;
+  renderCategories();
   renderTools();
 }
 
-function showPurchase(id) {
-  const t = tools.find(x => x.id === id);
-
-  showModal("Purchase " + t.name, `
-    <div class="price-big">${money(t.price)}</div>
-    <p class="desc">Individual tool · 60-day access after manual confirmation</p>
-    <hr>
-    <b>Receiver name: NOVA AI</b>
-
-    <div class="payment-method">
-      <b>Easypaisa</b><br>
-      <span class="account-number">${PAYMENTS.easypaisa}</span>
-      <button class="copy-btn" onclick="copyNumber('${PAYMENTS.easypaisa}')">Copy</button>
-    </div>
-
-    <div class="payment-method">
-      <b>JazzCash</b><br>
-      <span class="account-number">${PAYMENTS.jazzcash}</span>
-      <button class="copy-btn" onclick="copyNumber('${PAYMENTS.jazzcash}')">Copy</button>
-    </div>
-
-    <label class="field-label">Payment method</label>
-    <select class="field" id="payMethod">
-      <option>Easypaisa</option>
-      <option>JazzCash</option>
-    </select>
-
-    <label class="field-label">Transaction ID</label>
-    <input class="field" id="txId" placeholder="Enter transaction ID">
-
-    <p class="notice">
-      Send payment only after checking the receiver name. Enter the transaction ID after paying. Payment is checked manually. After confirmation, NOVA AI will share the access code. You must sign in and enter it in My Account.
-    </p>
-
-    <button class="btn" style="width:100%;margin-top:12px" onclick="sendRequest('${t.id}')">
-      Send Payment Request on WhatsApp
-    </button>
-
-    <p class="notice">
-      After NOVA AI manually confirms your payment, you will receive the shared access code. Sign in, open My Account, select this tool and enter that code. The one-hour activation countdown then begins.
-    </p>
-  `);
-}
-
-function sendRequest(id) {
-  const t = tools.find(x => x.id === id);
-  const method = document.getElementById("payMethod").value;
-  const tx = document.getElementById("txId").value.trim();
-
-  if (!tx) {
-    alert("Enter your transaction ID first.");
-    return;
-  }
-
-  const msg = `NOVA AI PAYMENT REQUEST
-Tool: ${t.name}
-Amount: ${money(t.price)}
-Payment method: ${method}
-Receiver: NOVA AI
-Transaction ID: ${tx}
-Please verify my payment and confirm my 60-day access.`;
-
-  window.open(
-    "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg),
-    "_blank"
-  );
-}
-
-function copyNumber(n) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(n).then(
-      () => alert("Number copied."),
-      () => alert("Copy this number: " + n)
-    );
-  } else {
-    alert("Copy this number: " + n);
-  }
-}
-
-function showModal(title, content) {
-  document.getElementById("modalTitle").textContent = title;
-  document.getElementById("modalContent").innerHTML = content;
-  document.getElementById("modal").classList.add("show");
-}
-
-function closeModal() {
-  document.getElementById("modal").classList.remove("show");
-}
-
-const ACCESS_CODE = "NOVA60";
-const ACCESS_WAIT_MS = 60 * 60 * 1000;
-const ACCESS_LENGTH_MS = 60 * 24 * 60 * 60 * 1000;
-
-function currentUser() {
-  try {
-    return JSON.parse(localStorage.getItem("nova_current_user") || "null");
-  } catch (e) {
-    return null;
-  }
-}
-
-function showAuth(mode = "signup") {
-  const isSignup = mode === "signup";
-
-  showModal(isSignup ? "Create Your NOVA AI Account" : "Login to NOVA AI", `
-    <p class="desc">Your account is stored in this browser in this demo version.</p>
-
-    <label class="field-label">Email address</label>
-    <input class="field" id="authEmail" type="email" placeholder="you@example.com">
-
-    <label class="field-label">Password</label>
-    <input class="field" id="authPass" type="password" placeholder="At least 6 characters">
-
-    ${isSignup ? '<label class="field-label">Confirm password</label><input class="field" id="authConfirm" type="password" placeholder="Repeat password">' : ''}
-
-    <button class="btn" style="width:100%;margin-top:14px" onclick="${isSignup ? 'createAccount()' : 'loginAccount()'}">
-      ${isSignup ? 'Create Account' : 'Login'}
-    </button>
-
-    <p class="desc">
-      ${isSignup ? 'Already registered?' : 'New to NOVA AI?'}
-      <a style="color:var(--gold);cursor:pointer" onclick="showAuth('${isSignup ? 'login' : 'signup'}')">
-        ${isSignup ? 'Login' : 'Create an account'}
-      </a>
-    </p>
-
-    <p class="notice">
-      Demo limitation: this frontend-only account is not secure and does not sync across devices. Do not reuse an important password.
-    </p>
-  `);
-}
-
-function createAccount() {
-  const email = (document.getElementById("authEmail").value || "").trim().toLowerCase();
-  const pass = document.getElementById("authPass").value;
-  const confirm = document.getElementById("authConfirm").value;
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return alert("Enter a valid email address.");
-  }
-
-  if (pass.length < 6) {
-    return alert("Password must be at least 6 characters.");
-  }
-
-  if (pass !== confirm) {
-    return alert("Passwords do not match.");
-  }
-
-  let users = {};
-
-  try {
-    users = JSON.parse(localStorage.getItem("nova_users") || "{}");
-  } catch (e) {}
-
-  if (users[email]) {
-    return alert("An account with this email already exists. Please log in.");
-  }
-
-  users[email] = {password: pass};
-
-  localStorage.setItem("nova_users", JSON.stringify(users));
-  localStorage.setItem("nova_current_user", JSON.stringify({email}));
-
-  showAccount();
-}
-
-function loginAccount() {
-  const email = (document.getElementById("authEmail").value || "").trim().toLowerCase();
-  const pass = document.getElementById("authPass").value;
-
-  let users = {};
-
-  try {
-    users = JSON.parse(localStorage.getItem("nova_users") || "{}");
-  } catch (e) {}
-
-  if (!users[email] || users[email].password !== pass) {
-    return alert("Email or password is incorrect.");
-  }
-
-  localStorage.setItem("nova_current_user", JSON.stringify({email}));
-  showAccount();
-}
-
-function logoutAccount() {
-  localStorage.removeItem("nova_current_user");
-  showAuth("login");
-}
-
-function accessKey(toolId) {
-  const u = currentUser();
-  return u ? "nova_access_" + u.email + "_" + toolId : null;
-}
-
-function accessStatus(toolId) {
-  const k = accessKey(toolId);
-
-  if (!k) return {state: "login"};
-
-  let a;
-
-  try {
-    a = JSON.parse(localStorage.getItem(k) || "null");
-  } catch (e) {
-    a = null;
-  }
-
-  if (!a) return {state: "locked"};
-
-  const now = Date.now();
-
-  if (a.startAt && now >= a.startAt && now < a.expiresAt) {
-    return {state: "active", expiresAt: a.expiresAt};
-  }
-
-  if (a.startAt && now < a.startAt) {
-    return {state: "waiting", startAt: a.startAt};
-  }
-
-  if (a.expiresAt && now >= a.expiresAt) {
-    localStorage.removeItem(k);
-    return {state: "expired"};
-  }
-
-  return {state: "locked"};
-}
-
-function handleTool(id) {
-  const user = currentUser();
-
-  if (!user) {
-    showAuth("signup");
-    return;
-  }
-
-  const st = accessStatus(id);
-
-  if (st.state === "active") {
-    openTool(id);
-    return;
-  }
-
-  if (st.state === "waiting") {
-    alert("Your code has been accepted. This tool activates in " +
-      Math.ceil((st.startAt - Date.now()) / 60000) + " minute(s).");
-    return;
-  }
-
-  showPurchase(id);
-}
-
-function showAccount() {
-  const u = currentUser();
-
-  if (!u) return showAuth("login");
-
-  const options = tools.map(t =>
-    `<option value="${t.id}">${t.name} — ${money(t.price)}</option>`
-  ).join("");
-
-  let rows = tools.map(t => {
-    let s = accessStatus(t.id);
-
-    let label =
-      s.state === "active" ? "ACTIVE" :
-      s.state === "waiting" ? "ACTIVATING IN " + Math.ceil((s.startAt - Date.now()) / 60000) + " MIN" :
-      s.state === "expired" ? "EXPIRED" :
-      "NOT ACTIVATED";
-
-    return `<p><b>${t.name}</b> — <span style="color:var(--gold)">${label}</span></p>`;
-  }).join("");
-
-  showModal("My NOVA AI Account", `
-    <p class="desc">Signed in as <b>${u.email}</b></p>
-
-    <label class="field-label">Select purchased tool</label>
-    <select class="field" id="activateTool">${options}</select>
-
-    <label class="field-label">Shared access code</label>
-    <input class="field" id="accessCode" placeholder="Enter code received after payment">
-
-    <button class="btn" style="width:100%;margin-top:12px" onclick="activateCode()">
-      Activate selected tool
-    </button>
-
-    <hr>
-    <b>Your tool access</b>
-    ${rows}
-
-    <button class="btn btn-dark" style="width:100%;margin-top:12px" onclick="logoutAccount()">
-      Log Out
-    </button>
-
-    <p class="notice">
-      Access starts one hour after code entry and expires 60 days after activation. This browser-only demo can be reset by clearing browser data.
-    </p>
-  `);
-}
-
-function activateCode() {
-  if (!currentUser()) return showAuth("login");
-
-  const code = (document.getElementById("accessCode").value || "").trim();
-  const id = document.getElementById("activateTool").value;
-
-  if (code.toUpperCase() !== ACCESS_CODE) {
-    return alert("Incorrect access code.");
-  }
-
-  const k = accessKey(id);
-  const existing = accessStatus(id);
-
-  if (existing.state === "active") {
-    return alert("This tool is already active.");
-  }
-
-  if (existing.state === "waiting") {
-    return alert("The one-hour activation countdown has already started.");
-  }
-
-  const enteredAt = Date.now();
-
-  localStorage.setItem(k, JSON.stringify({
-    enteredAt,
-    startAt: enteredAt + ACCESS_WAIT_MS,
-    expiresAt: enteredAt + ACCESS_WAIT_MS + ACCESS_LENGTH_MS
-  }));
-
-  alert("Code accepted. Your selected tool will activate in one hour.");
-  showAccount();
-}
-
-function openTool(id) {
-  const t = tools.find(x => x.id === id);
-
-  if (!t) return;
-
-  document.getElementById("workTitle").textContent = t.icon + " " + t.name;
-  document.getElementById("workDescription").textContent = t.desc;
-
-  let h = "";
-
-  let input = `
-    <label class="field-label">Your text</label>
-    <textarea id="data" placeholder="Type or paste here..."></textarea>
-  `;
-
-  switch (t.kind) {
-    case "qr":
-      h = `
-        <label class="field-label">Website URL</label>
-        <input class="field" id="qrUrl" placeholder="https://example.com">
-        <label class="field-label">Optional logo</label>
-        <input class="field" type="file" id="qrLogo" accept="image/*">
-        <label class="field-label">QR color</label>
-        <input class="field" type="color" id="qrColor" value="#111111">
-        <button class="btn" onclick="makeQR()">Generate QR</button>
-        <div id="qrResult" class="tool-output output-center">QR appears here.</div>
-      `;
-      break;
-
-    case "barcode":
-      h = `
-        <input class="field" id="barVal" placeholder="Product code">
-        <button class="btn" onclick="makeBarcode()">Generate Barcode</button>
-        <div class="tool-output output-center"><svg id="barSvg"></svg></div>
-        <button class="btn" onclick="downloadBarcode()">Download SVG</button>
-      `;
-      break;
-
-    case "image":
-      h = `
-        <label class="field-label">Choose image</label>
-        <input class="field" type="file" id="imgFile" accept="image/*">
-        <label class="field-label">Maximum output width (px)</label>
-        <input class="field" id="imgWidth" type="number" value="1000">
-        <label class="field-label">JPEG quality (0.1–1)</label>
-        <input class="field" id="imgQuality" type="number" min=".1" max="1" step=".05" value=".75">
-        <button class="btn" onclick="processImage('${t.id}')">Process Image</button>
-        <div id="imgResult" class="tool-output"></div>
-      `;
-      break;
-
-    case "invoice":
-      h = `
-        <input class="field" id="biz" placeholder="Business name">
-        <input class="field" id="cust" placeholder="Customer name">
-        <input class="field" id="item" placeholder="Product or service">
-        <input class="field" id="amt" type="number" placeholder="Amount (PKR)">
-        <button class="btn" onclick="makeInvoice()">Create Invoice</button>
-        <div id="invoiceOut" class="tool-output"></div>
-      `;
-      break;
-
-    case "resume":
-      h = `
-        <input class="field" id="rName" placeholder="Full name">
-        <input class="field" id="rEmail" placeholder="Email">
-        <input class="field" id="rRole" placeholder="Professional title">
-        <textarea id="rAbout" placeholder="Professional summary"></textarea>
-        <textarea id="rSkills" placeholder="Skills"></textarea>
-        <textarea id="rExp" placeholder="Experience and education"></textarea>
-        <button class="btn" onclick="makeResume()">Generate Resume</button>
-        <div id="resumeOut" class="tool-output"></div>
-      `;
-      break;
-
-    case "pdf":
-      h = `
-        <label class="field-label">Select two or more PDF files</label>
-        <input class="field" type="file" id="pdfFiles" accept="application/pdf" multiple>
-        <button class="btn" onclick="mergePDFs()">Merge PDFs</button>
-        <div id="pdfOut" class="tool-output">Files are processed locally in your browser.</div>
-      `;
-      break;
-
-    case "thumbnail":
-    case "social":
-      h = `
-        <label class="field-label">Background image (optional)</label>
-        <input class="field" type="file" id="designImage" accept="image/*">
-        <label class="field-label">Main text</label>
-        <input class="field" id="designTitle" placeholder="Your headline">
-        <label class="field-label">Subtitle</label>
-        <input class="field" id="designSub" placeholder="Optional subtitle">
-        <label class="field-label">Background color</label>
-        <input class="field" id="designColor" type="color" value="#171d2d">
-        <button class="btn" onclick="makeDesign('${t.kind}')">Create Design</button>
-        <div class="tool-output output-center">
-          <canvas id="designCanvas" style="max-width:100%;height:auto"></canvas>
-        </div>
-        <button class="btn" onclick="downloadDesign()">Download PNG</button>
-      `;
-      break;
-
-    case "seo":
-      h = `
-        <p class="desc">Paste the HTML source of a page. This browser tool checks basic on-page SEO fields; it does not crawl websites.</p>
-        <textarea id="seoSource" placeholder="Paste page HTML source here..."></textarea>
-        <button class="btn" onclick="analyzeSEO()">Analyze Source</button>
-        <div id="seoOut" class="tool-output"></div>
-      `;
-      break;
-
-    case "favicon":
-      h = `
-        <label class="field-label">Text or emoji</label>
-        <input class="field" id="favText" maxlength="3" value="N">
-        <label class="field-label">Background</label>
-        <input class="field" id="favBg" type="color" value="#d8b46a">
-        <label class="field-label">Text color</label>
-        <input class="field" id="favFg" type="color" value="#111111">
-        <button class="btn" onclick="makeFavicon()">Create Icon</button>
-        <div class="tool-output output-center">
-          <canvas id="favCanvas" width="256" height="256" style="max-width:180px"></canvas>
-        </div>
-        <button class="btn" onclick="downloadFavicon()">Download PNG</button>
-      `;
-      break;
-
-    case "word":
-      h = input + '<button class="btn" onclick="wordCount()">Count</button><div id="result" class="tool-output"></div>';
-      break;
-
-    case "case":
-      h = input + `
-        <div class="tool-actions">
-          <button class="btn" onclick="convertCase('upper')">UPPER</button>
-          <button class="btn" onclick="convertCase('lower')">lower</button>
-          <button class="btn" onclick="convertCase('title')">Title Case</button>
-          <button class="btn" onclick="convertCase('sentence')">Sentence</button>
-        </div>
-      `;
-      break;
-
-    case "json":
-      h = input + '<button class="btn" onclick="formatJSON()">Format JSON</button><div id="result" class="tool-output"></div>';
-      break;
-
-    case "password":
-      h = `
-        <label class="field-label">Password length</label>
-        <input class="field" id="passLength" type="number" value="18" min="8" max="64">
-        <button class="btn" onclick="generatePassword()">Generate Password</button>
-        <div id="result" class="tool-output"></div>
-      `;
-      break;
-
-    case "calc":
-      h = `
-        <input class="field" id="calcInput" placeholder="Example: (25 + 5) * 2">
-        <button class="btn" onclick="doCalc()">Calculate</button>
-        <div id="result" class="tool-output"></div>
-      `;
-      break;
-
-    case "percent":
-      h = `
-        <input class="field" id="percentA" type="number" placeholder="Percentage">
-        <input class="field" id="percentB" type="number" placeholder="Number">
-        <button class="btn" onclick="doPercent()">Calculate</button>
-        <div id="result" class="tool-output"></div>
-      `;
-      break;
-
-    case "color":
-      h = `
-        <input class="field" id="colorInput" type="color" value="#d8b46a">
-        <button class="btn" onclick="showColor()">Get Color Codes</button>
-        <div id="result" class="tool-output"></div>
-      `;
-      break;
-
-    case "unit":
-      h = `
-        <input class="field" id="unitValue" type="number" placeholder="Value">
-        <select class="field" id="unitType">
-          <option value="km">Kilometers to Miles</option>
-          <option value="mi">Miles to Kilometers</option>
-          <option value="kg">Kilograms to Pounds</option>
-          <option value="lb">Pounds to Kilograms</option>
-        </select>
-        <button class="btn" onclick="convertUnit()">Convert</button>
-        <div id="result" class="tool-output"></div>
-      `;
-      break;
-
-    case "notes":
-      h = input + '<button class="btn" onclick="downloadNotes()">Download TXT</button>';
-      break;
-
-    case "binary":
-      h = input + `
-        <div class="tool-actions">
-          <button class="btn" onclick="toBinary()">Text to Binary</button>
-          <button class="btn" onclick="fromBinary()">Binary to Text</button>
-        </div>
-        <div id="result" class="tool-output"></div>
-      `;
-      break;
-  }
-
-  document.getElementById("workContent").innerHTML = h;
-
-  const w = document.getElementById("workspace");
-  w.classList.add("show");
-  w.scrollIntoView({behavior: "smooth"});
+function toggleMenu() {
+  $("nav").classList.toggle("open");
 }
 
 function closeTool() {
-  document.getElementById("workspace").classList.remove("show");
+  $("workspace").classList.remove("show");
+  selectedTool = null;
 }
 
-function out(v) {
-  document.getElementById("result").textContent = v;
+function openTool(id) {
+  const tool = tools.find(item => item.id === id);
+  if (!tool) return;
+
+  selectedTool = tool;
+
+  $("workTitle").textContent = tool.name;
+  $("workDescription").textContent = tool.desc;
+  $("workspace").classList.add("show");
+  $("workContent").innerHTML = toolInterface(tool.kind);
+
+  $("workspace").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
-function getText() {
-  return document.getElementById("data").value;
+function field(label, id, placeholder="", type="text") {
+  return `
+    <label>${escapeHTML(label)}</label>
+    <input id="${id}" type="${type}" placeholder="${escapeHTML(placeholder)}">
+  `;
 }
 
-function wordCount() {
-  let s = getText();
-
-  out(
-    "Words: " + (s.trim() ? s.trim().split(/\s+/).length : 0) +
-    "\nCharacters: " + s.length +
-    "\nWithout spaces: " + s.replace(/\s/g, "").length +
-    "\nSentences: " + (s.match(/[.!?]+/g) || []).length +
-    "\nEstimated reading time: " +
-    Math.max(1, Math.ceil(s.trim().split(/\s+/).filter(Boolean).length / 200)) +
-    " min"
-  );
+function area(label, id, placeholder="Enter text here...") {
+  return `
+    <label>${escapeHTML(label)}</label>
+    <textarea id="${id}" placeholder="${escapeHTML(placeholder)}"></textarea>
+  `;
 }
 
-function convertCase(type) {
-  let s = getText();
+function action(label, fn) {
+  return `<button type="button" onclick="${fn}">${escapeHTML(label)}</button>`;
+}
 
-  if (type === "upper") s = s.toUpperCase();
-  if (type === "lower") s = s.toLowerCase();
+function toolInterface(kind) {
+  switch(kind) {
+    case "qr":
+      return `
+        ${field("Enter URL or text","qrText","https://example.com")}
+        ${action("Generate QR Code","generateQR()")}
+        <div id="qrResult" class="result"></div>`;
 
-  if (type === "title") {
-    s = s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    case "barcode":
+      return `
+        ${field("Enter barcode number","barcodeText","123456789")}
+        ${action("Generate Barcode","generateBarcode()")}
+        <div class="result"><svg id="barcodeResult"></svg></div>`;
+
+    case "compress":
+      return `
+        <label>Select image</label>
+        <input id="imageFile" type="file" accept="image/*">
+        ${field("Quality (0.1 to 1)","imageQuality","0.7","number")}
+        ${action("Compress Image","compressImage()")}
+        <div id="imageResult" class="result"></div>`;
+
+    case "resize":
+      return `
+        <label>Select image</label>
+        <input id="resizeFile" type="file" accept="image/*">
+        ${field("Width in pixels","resizeWidth","800","number")}
+        ${field("Height in pixels","resizeHeight","600","number")}
+        ${action("Resize Image","resizeImage()")}
+        <div id="resizeResult" class="result"></div>`;
+
+    case "invoice":
+    case "quotation":
+      return `
+        ${field("Business name","invBusiness","NOVA AI")}
+        ${field("Customer name","invCustomer","Customer")}
+        ${field("Document number","invNumber","INV-001")}
+        ${field("Date","invDate",new Date().toISOString().slice(0,10),"date")}
+        ${field("Item / service","invItem","Digital service")}
+        ${field("Quantity","invQty","1","number")}
+        ${field("Unit price (PKR)","invPrice","1000","number")}
+        ${action("Create & Print Document","createInvoice('${kind}')")}
+        <div id="invoiceResult"></div>`;
+
+    case "resume":
+      return `
+        ${field("Full name","cvName","Your name")}
+        ${field("Email","cvEmail","you@example.com","email")}
+        ${field("Phone","cvPhone","Phone number")}
+        ${field("Professional title","cvTitle","Your profession")}
+        ${area("About you","cvAbout")}
+        ${area("Skills","cvSkills","Communication, teamwork...")}
+        ${area("Education","cvEducation")}
+        ${area("Experience","cvExperience")}
+        ${action("Build Resume","buildResume()")}
+        <div id="resumeResult"></div>`;
+
+    case "pdf":
+      return `
+        <label>Select PDF files</label>
+        <input id="pdfFiles" type="file" accept="application/pdf" multiple>
+        ${action("Merge PDFs","mergePDFs()")}
+        <div id="pdfResult"></div>`;
+
+    case "thumbnail":
+    case "social":
+      return `
+        ${field("Main heading","designHeading","YOUR BIG TITLE")}
+        ${field("Subtitle","designSubtitle","Add your subtitle")}
+        ${field("Background color","designColor","#151724","color")}
+        ${field("Text color","designTextColor","#ffffff","color")}
+        ${field("Canvas width","designWidth",kind==="thumbnail"?"1280":"1080","number")}
+        ${field("Canvas height","designHeight",kind==="thumbnail"?"720":"1080","number")}
+        ${action("Create Design","createDesign()")}
+        <div class="result"><canvas id="designCanvas" style="width:100%"></canvas></div>
+        ${action("Download Design","downloadDesign()")}`;
+
+    case "seo":
+      return `
+        ${area("Paste HTML source code","seoHTML","Paste your webpage HTML here...")}
+        ${action("Analyze SEO","analyzeSEO()")}
+        <div id="seoResult" class="result"></div>`;
+
+    case "favicon":
+      return `
+        <label>Select image</label>
+        <input id="faviconFile" type="file" accept="image/*">
+        ${action("Create Favicon","createFavicon()")}
+        <div id="faviconResult"></div>`;
+
+    case "word":
+      return `
+        ${area("Your text","wordText")}
+        <div id="wordResult" class="result"></div>
+        <button onclick="countWords()">Count Text</button>`;
+
+    case "case":
+      return `
+        ${area("Enter text","caseText")}
+        <select id="caseType">
+          <option value="upper">UPPERCASE</option>
+          <option value="lower">lowercase</option>
+          <option value="title">Title Case</option>
+          <option value="sentence">Sentence case</option>
+        </select>
+        ${action("Convert Text","convertCase()")}
+        <div id="caseResult" class="result"></div>`;
+
+    case "json":
+      return `
+        ${area("JSON input","jsonText",'{"name":"NOVA AI","active":true}')}
+        ${action("Format JSON","formatJSON()")}
+        <div id="jsonResult" class="result"></div>`;
+
+    case "password":
+      return `
+        ${field("Password length","passLength","16","number")}
+        <label><input id="passSymbols" type="checkbox" checked> Include symbols</label>
+        ${action("Generate Password","generatePassword()")}
+        <div id="passwordResult" class="result"></div>`;
+
+    case "calculator":
+      return `
+        ${field("Expression","calcInput","(25+10)*2")}
+        ${action("Calculate","calculate()")}
+        <div id="calcResult" class="result"></div>`;
+
+    case "percentage":
+      return `
+        ${field("Value","percentValue","200","number")}
+        ${field("Percentage","percentRate","15","number")}
+        ${action("Calculate Percentage","calculatePercentage()")}
+        <div id="percentResult" class="result"></div>`;
+
+    case "color":
+      return `
+        <label>Choose a color</label>
+        <input id="colorPicker" type="color" value="#d9ad58" oninput="showColor()">
+        <div id="colorResult" class="result"></div>
+        ${action("Copy HEX","copyColor()")}`;
+
+    case "unit":
+      return `
+        ${field("Value","unitValue","1","number")}
+        <select id="unitType">
+          <option value="km-mi">Kilometers to Miles</option>
+          <option value="mi-km">Miles to Kilometers</option>
+          <option value="kg-lb">Kilograms to Pounds</option>
+          <option value="lb-kg">Pounds to Kilograms</option>
+          <option value="cm-in">Centimeters to Inches</option>
+          <option value="in-cm">Inches to Centimeters</option>
+          <option value="c-f">Celsius to Fahrenheit</option>
+          <option value="f-c">Fahrenheit to Celsius</option>
+        </select>
+        ${action("Convert","convertUnit()")}
+        <div id="unitResult" class="result"></div>`;
+
+    case "notes":
+      return `
+        ${field("Note title","noteTitle","My Notes")}
+        ${area("Write your notes","noteText")}
+        ${action("Download Notes","downloadNotes()")}`;
+
+    case "binary":
+      return `
+        ${area("Enter text or binary","binaryInput","Hello")}
+        <select id="binaryMode">
+          <option value="toBinary">Text to Binary</option>
+          <option value="toText">Binary to Text</option>
+        </select>
+        ${action("Convert","convertBinary()")}
+        <div id="binaryResult" class="result"></div>`;
+
+    case "planner":
+      return `
+        ${field("Business / page name","planName","My Business")}
+        ${field("Platform","planPlatform","Instagram")}
+        ${field("Number of days","planDays","7","number")}
+        ${field("Main topic","planTopic","Your topic")}
+        ${action("Create Content Plan","createPlanner()")}
+        <div id="plannerResult" class="result"></div>`;
+
+    case "listing":
+      return `
+        ${field("Product name","productName","Product name")}
+        ${field("Main features","productFeatures","Feature one, feature two")}
+        ${field("Target customer","productAudience","General customers")}
+        <select id="productTone">
+          <option>Professional</option>
+          <option>Friendly</option>
+          <option>Luxury</option>
+          <option>Simple</option>
+        </select>
+        ${action("Create Listing Draft","createListing()")}
+        <div id="listingResult" class="result"></div>`;
+
+    case "profit":
+      return `
+        ${field("Cost price (PKR)","profitCost","1000","number")}
+        ${field("Selling price (PKR)","profitSell","1500","number")}
+        ${action("Calculate Profit","calculateProfit()")}
+        <div id="profitResult" class="result"></div>`;
+
+    case "caption":
+      return `
+        ${field("Topic / product","captionTopic","Your topic")}
+        <select id="captionPlatform">
+          <option>Instagram</option>
+          <option>Facebook</option>
+          <option>TikTok</option>
+          <option>LinkedIn</option>
+        </select>
+        <select id="captionStyle">
+          <option>Professional</option>
+          <option>Funny</option>
+          <option>Motivational</option>
+          <option>Luxury</option>
+        </select>
+        ${action("Generate Caption Ideas","createCaptions()")}
+        <div id="captionResult" class="result"></div>`;
+
+    default:
+      return "<p>This tool is not available.</p>";
+  }
+}
+
+function result(id, html) {
+  const element = $(id);
+  if (element) element.innerHTML = html;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadText(text, filename) {
+  downloadBlob(new Blob([text], {type:"text/plain;charset=utf-8"}), filename);
+}
+
+function generateQR() {
+  const text = $("qrText").value.trim();
+  if (!text) return alert("Enter text or URL first.");
+  const box = $("qrResult");
+  box.innerHTML = "";
+  new QRCode(box, {text,width:220,height:220});
+}
+
+function generateBarcode() {
+  const value = $("barcodeText").value.trim();
+  if (!value) return alert("Enter a barcode value.");
+  try {
+    JsBarcode("#barcodeResult", value, {format:"CODE128",displayValue:true});
+  } catch(error) {
+    alert("Could not create barcode. Check your input.");
+  }
+}
+
+function loadImage(file) {
+  return new Promise((resolve,reject) => {
+    const image = new Image();
+    const url = URL.createObjectURL(file);
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+    image.onerror = reject;
+    image.src = url;
+  });
+}
+
+async function compressImage() {
+  const file = $("imageFile").files[0];
+  if (!file) return alert("Select an image.");
+  const image = await loadImage(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = image.width;
+  canvas.height = image.height;
+  canvas.getContext("2d").drawImage(image,0,0);
+  const quality = Math.min(1,Math.max(.1,Number($("imageQuality").value)||.7));
+  canvas.toBlob(blob => {
+    if (!blob) return alert("Compression failed.");
+    result("imageResult",`
+      <p>Original: ${(file.size/1024).toFixed(1)} KB</p>
+      <p>Compressed: ${(blob.size/1024).toFixed(1)} KB</p>
+      <button onclick="downloadBlob(window.lastImageBlob,'compressed-image.jpg')">Download Image</button>
+    `);
+    window.lastImageBlob = blob;
+  },"image/jpeg",quality);
+}
+
+async function resizeImage() {
+  const file = $("resizeFile").files[0];
+  if (!file) return alert("Select an image.");
+  const image = await loadImage(file);
+  const width = Math.max(1,Number($("resizeWidth").value)||800);
+  const height = Math.max(1,Number($("resizeHeight").value)||600);
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  canvas.getContext("2d").drawImage(image,0,0,width,height);
+  canvas.toBlob(blob => {
+    if (!blob) return alert("Resize failed.");
+    window.lastResizeBlob = blob;
+    result("resizeResult",`
+      <p>New size: ${width} × ${height}</p>
+      <button onclick="downloadBlob(window.lastResizeBlob,'resized-image.png')">Download Image</button>
+    `);
+  },"image/png");
+}
+
+function createInvoice(kind) {
+  const business = $("invBusiness").value.trim();
+  const customer = $("invCustomer").value.trim();
+  const number = $("invNumber").value.trim();
+  const date = $("invDate").value;
+  const item = $("invItem").value.trim();
+  const qty = Math.max(0,Number($("invQty").value)||0);
+  const price = Math.max(0,Number($("invPrice").value)||0);
+  const total = qty * price;
+  const heading = kind === "quotation" ? "QUOTATION" : "INVOICE";
+
+  const html = `
+    <div class="result" style="background:white;color:#111;padding:25px">
+      <h2>${heading}</h2>
+      <h3>${escapeHTML(business)}</h3>
+      <p>Document: ${escapeHTML(number)}</p>
+      <p>Date: ${escapeHTML(date)}</p>
+      <p>Customer: ${escapeHTML(customer)}</p>
+      <hr>
+      <p>${escapeHTML(item)} — ${qty} × ${money(price)}</p>
+      <h2>Total: ${money(total)}</h2>
+    </div>
+    <button onclick="window.print()">Print / Save PDF</button>
+  `;
+
+  result("invoiceResult",html);
+}
+
+function buildResume() {
+  const values = ["cvName","cvEmail","cvPhone","cvTitle","cvAbout","cvSkills","cvEducation","cvExperience"]
+    .map(id => $(id).value.trim());
+
+  const [name,email,phone,title,about,skills,education,experience] = values;
+
+  const html = `
+    <div class="result" style="background:white;color:#111;padding:25px">
+      <h1>${escapeHTML(name)}</h1>
+      <h3>${escapeHTML(title)}</h3>
+      <p>${escapeHTML(email)} | ${escapeHTML(phone)}</p>
+      <h3>Profile</h3><p>${escapeHTML(about)}</p>
+      <h3>Skills</h3><p>${escapeHTML(skills)}</p>
+      <h3>Education</h3><p>${escapeHTML(education)}</p>
+      <h3>Experience</h3><p>${escapeHTML(experience)}</p>
+    </div>
+    <button onclick="window.print()">Print / Save PDF</button>
+  `;
+
+  result("resumeResult",html);
+}
+
+async function mergePDFs() {
+  const files = [...$("pdfFiles").files];
+  if (files.length < 2) return alert("Select at least two PDF files.");
+  if (!window.PDFLib) return alert("PDF library did not load.");
+
+  try {
+    const merged = await PDFLib.PDFDocument.create();
+
+    for (const file of files) {
+      const pdf = await PDFLib.PDFDocument.load(await file.arrayBuffer());
+      const pages = await merged.copyPages(pdf,pdf.getPageIndices());
+      pages.forEach(page => merged.addPage(page));
+    }
+
+    const bytes = await merged.save();
+    downloadBlob(new Blob([bytes],{type:"application/pdf"}),"merged.pdf");
+    result("pdfResult","<p>PDF files merged successfully.</p>");
+  } catch(error) {
+    alert("Unable to merge these PDF files.");
+  }
+}
+
+function createDesign() {
+  const canvas = $("designCanvas");
+  const width = Math.max(100,Number($("designWidth").value)||1080);
+  const height = Math.max(100,Number($("designHeight").value)||1080);
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = $("designColor").value;
+  ctx.fillRect(0,0,width,height);
+
+  ctx.fillStyle = $("designTextColor").value;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const heading = $("designHeading").value || "YOUR BIG TITLE";
+  const subtitle = $("designSubtitle").value || "";
+
+  ctx.font = `bold ${Math.floor(width/12)}px Arial`;
+  wrapText(ctx,heading,width/2,height/2,width*.82,Math.floor(width/9));
+
+  ctx.font = `${Math.floor(width/28)}px Arial`;
+  ctx.fillText(subtitle,width/2,height*.75);
+}
+
+function wrapText(ctx,text,x,y,maxWidth,lineHeight) {
+  const words = text.split(/\s+/);
+  let lines = [];
+  let line = "";
+
+  for (const word of words) {
+    const test = line ? line+" "+word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else line = test;
   }
 
-  if (type === "sentence") {
-    s = s.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
-  }
+  if (line) lines.push(line);
+  const start = y - ((lines.length-1)*lineHeight)/2;
+  lines.forEach((line,index) => ctx.fillText(line,x,start+index*lineHeight));
+}
 
-  document.getElementById("data").value = s;
+function downloadDesign() {
+  const canvas = $("designCanvas");
+  if (!canvas.width) return alert("Create your design first.");
+  canvas.toBlob(blob => downloadBlob(blob,"nova-design.png"));
+}
+
+function analyzeSEO() {
+  const source = $("seoHTML").value;
+  if (!source.trim()) return alert("Paste HTML first.");
+
+  const doc = new DOMParser().parseFromString(source,"text/html");
+  const title = doc.querySelector("title")?.textContent || "Missing";
+  const description = doc.querySelector('meta[name="description"]')?.content || "Missing";
+  const h1 = doc.querySelectorAll("h1").length;
+  const images = doc.querySelectorAll("img").length;
+  const missingAlt = [...doc.querySelectorAll("img")].filter(img => !img.hasAttribute("alt")).length;
+
+  result("seoResult",`
+    <p><b>Title:</b> ${escapeHTML(title)}</p>
+    <p><b>Description:</b> ${escapeHTML(description)}</p>
+    <p><b>H1 headings:</b> ${h1}</p>
+    <p><b>Images:</b> ${images}</p>
+    <p><b>Images missing alt:</b> ${missingAlt}</p>
+    <p><b>Title length:</b> ${title.length} characters</p>
+    <p><b>Description length:</b> ${description.length} characters</p>
+    <p>This is a basic source check, not a full technical SEO audit.</p>
+  `);
+}
+
+async function createFavicon() {
+  const file = $("faviconFile").files[0];
+  if (!file) return alert("Select an image.");
+  const image = await loadImage(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,256,256);
+  ctx.drawImage(image,0,0,256,256);
+  canvas.toBlob(blob => {
+    window.lastFaviconBlob = blob;
+    result("faviconResult",`
+      <p>Favicon created.</p>
+      <button onclick="downloadBlob(window.lastFaviconBlob,'favicon.png')">Download PNG</button>
+    `);
+  },"image/png");
+}
+
+function countWords() {
+  const text = $("wordText").value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  const sentences = text ? (text.match(/[.!?]+/g)||[]).length : 0;
+  result("wordResult",`
+    <p>Words: <b>${words}</b></p>
+    <p>Characters: <b>${text.length}</b></p>
+    <p>Characters without spaces: <b>${text.replace(/\s/g,"").length}</b></p>
+    <p>Sentences: <b>${sentences}</b></p>
+  `);
+}
+
+function convertCase() {
+  const text = $("caseText").value;
+  const mode = $("caseType").value;
+  let output = text;
+
+  if (mode === "upper") output = text.toUpperCase();
+  if (mode === "lower") output = text.toLowerCase();
+  if (mode === "title") output = text.toLowerCase().replace(/\b\w/g,char=>char.toUpperCase());
+  if (mode === "sentence") output = text.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g,char=>char.toUpperCase());
+
+  result("caseResult",`
+    <p>${escapeHTML(output)}</p>
+    <button onclick="copyText(${JSON.stringify(output).replace(/</g,"\\u003c")})">Copy Text</button>
+  `);
 }
 
 function formatJSON() {
   try {
-    out(JSON.stringify(JSON.parse(getText()), null, 2));
-  } catch (e) {
-    out("Invalid JSON: " + e.message);
+    const parsed = JSON.parse($("jsonText").value);
+    const output = JSON.stringify(parsed,null,2);
+    result("jsonResult",`
+      <pre>${escapeHTML(output)}</pre>
+      <button onclick="copyText(${JSON.stringify(output).replace(/</g,"\\u003c")})">Copy JSON</button>
+    `);
+  } catch(error) {
+    result("jsonResult","<p>Invalid JSON. Check commas, quotes and brackets.</p>");
   }
 }
 
 function generatePassword() {
-  let n = Math.max(8, Math.min(64, +document.getElementById("passLength").value || 18));
-  let chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*";
+  const length = Math.min(128,Math.max(8,Number($("passLength").value)||16));
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" +
+    ($("passSymbols").checked ? "!@#$%^&*()-_=+[]{}?" : "");
+  const values = new Uint32Array(length);
+  crypto.getRandomValues(values);
+  const password = [...values].map(value=>chars[value%chars.length]).join("");
 
-  let a = new Uint32Array(n);
-  crypto.getRandomValues(a);
-
-  out(Array.from(a, x => chars[x % chars.length]).join(""));
+  result("passwordResult",`
+    <p>${escapeHTML(password)}</p>
+    <button onclick="copyText('${password}')">Copy Password</button>
+  `);
 }
 
-function doCalc() {
-  let s = document.getElementById("calcInput").value;
-
-  if (!/^[0-9+\-*/().%\s]+$/.test(s)) {
-    return out("Invalid expression");
+function calculate() {
+  const expression = $("calcInput").value.trim();
+  if (!/^[0-9+\-*/().%\s]+$/.test(expression)) {
+    return result("calcResult","<p>Only numbers and basic math operators are allowed.</p>");
   }
 
   try {
-    let n = Function('"use strict";return (' + s + ')')();
-    out(Number.isFinite(n) ? String(n) : "Invalid result");
-  } catch (e) {
-    out("Invalid expression");
+    const answer = Function('"use strict";return ('+expression+')')();
+    if (!Number.isFinite(answer)) throw new Error();
+    result("calcResult","<h3>"+answer+"</h3>");
+  } catch(error) {
+    result("calcResult","<p>Invalid calculation.</p>");
   }
 }
 
-function doPercent() {
-  let a = Number(document.getElementById("percentA").value);
-  let b = Number(document.getElementById("percentB").value);
-
-  out((a * b / 100).toFixed(2));
+function calculatePercentage() {
+  const value = Number($("percentValue").value);
+  const rate = Number($("percentRate").value);
+  result("percentResult",`<h3>${(value*rate/100).toLocaleString()}</h3>`);
 }
 
 function showColor() {
-  let c = document.getElementById("colorInput").value;
+  const color = $("colorPicker").value;
+  const rgb = color.match(/[a-f0-9]{2}/gi).map(value=>parseInt(value,16));
+  result("colorResult",`
+    <div style="height:80px;border-radius:8px;background:${color}"></div>
+    <p>HEX: ${color}</p>
+    <p>RGB: ${rgb.join(", ")}</p>
+  `);
+}
 
-  out(
-    "HEX: " + c.toUpperCase() +
-    "\nRGB: " +
-    parseInt(c.slice(1, 3), 16) + ", " +
-    parseInt(c.slice(3, 5), 16) + ", " +
-    parseInt(c.slice(5, 7), 16)
-  );
+function copyColor() {
+  copyText($("colorPicker").value);
 }
 
 function convertUnit() {
-  let n = Number(document.getElementById("unitValue").value);
-  let u = document.getElementById("unitType").value;
+  const value = Number($("unitValue").value);
+  const type = $("unitType").value;
+  const conversions = {
+    "km-mi":value*.621371,
+    "mi-km":value/ .621371,
+    "kg-lb":value*2.20462,
+    "lb-kg":value/2.20462,
+    "cm-in":value/2.54,
+    "in-cm":value*2.54,
+    "c-f":value*9/5+32,
+    "f-c":(value-32)*5/9
+  };
 
-  let f = {
-    km: [.621371, "miles"],
-    mi: [1.60934, "km"],
-    kg: [2.20462, "lbs"],
-    lb: [.453592, "kg"]
-  }[u];
-
-  out((n * f[0]).toFixed(4) + " " + f[1]);
+  result("unitResult","<h3>"+conversions[type].toFixed(4)+"</h3>");
 }
 
 function downloadNotes() {
-  let b = new Blob([getText()], {type: "text/plain"});
-  let u = URL.createObjectURL(b);
-  let a = document.createElement("a");
-
-  a.href = u;
-  a.download = "nova-notes.txt";
-  a.click();
-
-  URL.revokeObjectURL(u);
+  const title = $("noteTitle").value || "My Notes";
+  const text = $("noteText").value;
+  downloadText(title+"\n\n"+text,"nova-notes.txt");
 }
 
-function toBinary() {
-  out(
-    Array.from(new TextEncoder().encode(getText()))
-      .map(x => x.toString(2).padStart(8, "0"))
-      .join(" ")
-  );
-}
-
-function fromBinary() {
-  try {
-    let a = getText().trim().split(/\s+/);
-
-    if (!a.length || a.some(x => !/^[01]{8}$/.test(x))) {
-      throw Error();
-    }
-
-    out(new TextDecoder().decode(new Uint8Array(a.map(x => parseInt(x, 2)))));
-  } catch (e) {
-    out("Enter valid 8-bit binary groups separated by spaces.");
-  }
-}
-
-function makeQR() {
-  let url = document.getElementById("qrUrl").value.trim();
+function convertBinary() {
+  const input = $("binaryInput").value.trim();
+  const mode = $("binaryMode").value;
 
   try {
-    let u = new URL(url);
-    if (!["http:", "https:"].includes(u.protocol)) throw Error();
-  } catch (e) {
-    alert("Enter a valid http or https URL.");
-    return;
-  }
+    let output;
 
-  let box = document.getElementById("qrResult");
-
-  box.innerHTML = `
-    <div class="qr-area"><div id="qrCanvas"></div></div>
-    <button class="btn" onclick="downloadQR()">Download PNG</button>
-  `;
-
-  new QRCode(document.getElementById("qrCanvas"), {
-    text: url,
-    width: 250,
-    height: 250,
-    colorDark: document.getElementById("qrColor").value,
-    colorLight: "#fff",
-    correctLevel: QRCode.CorrectLevel.H
-  });
-}
-
-async function downloadQR() {
-  let c0 = document.querySelector("#qrCanvas canvas");
-
-  if (!c0) return;
-
-  let c = document.createElement("canvas");
-  c.width = c0.width;
-  c.height = c0.height;
-  c.getContext("2d").drawImage(c0, 0, 0);
-
-  let f = document.getElementById("qrLogo").files[0];
-
-  if (f) {
-    try {
-      let im = new Image();
-      im.src = URL.createObjectURL(f);
-      await im.decode();
-
-      let s = c.width * .2;
-      let x = (c.width - s) / 2;
-      let ctx = c.getContext("2d");
-
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(x - 5, x - 5, s + 10, s + 10);
-      ctx.drawImage(im, x, x, s, s);
-    } catch (e) {}
-  }
-
-  let a = document.createElement("a");
-  a.href = c.toDataURL();
-  a.download = "nova-qr.png";
-  a.click();
-}
-
-function makeBarcode() {
-  let v = document.getElementById("barVal").value;
-
-  if (!v) return alert("Enter a code.");
-
-  try {
-    JsBarcode("#barSvg", v, {
-      format: "CODE128",
-      displayValue: true,
-      background: "#fff",
-      lineColor: "#000"
-    });
-  } catch (e) {
-    alert("Invalid barcode value.");
-  }
-}
-
-function downloadBarcode() {
-  let s = document.getElementById("barSvg");
-
-  if (!s.innerHTML) return alert("Generate a barcode first.");
-
-  let b = new Blob(
-    [new XMLSerializer().serializeToString(s)],
-    {type: "image/svg+xml"}
-  );
-
-  let u = URL.createObjectURL(b);
-  let a = document.createElement("a");
-
-  a.href = u;
-  a.download = "nova-barcode.svg";
-  a.click();
-
-  URL.revokeObjectURL(u);
-}
-
-function processImage() {
-  let f = document.getElementById("imgFile").files[0];
-
-  if (!f) return alert("Choose an image.");
-
-  let w = Math.max(1, Math.min(6000, +document.getElementById("imgWidth").value || 1000));
-  let q = Math.max(.1, Math.min(1, +document.getElementById("imgQuality").value || .75));
-  let url = URL.createObjectURL(f);
-  let im = new Image();
-
-  im.onload = () => {
-    let nw = Math.min(w, im.width);
-    let nh = Math.round(im.height * nw / im.width);
-    let c = document.createElement("canvas");
-
-    c.width = nw;
-    c.height = nh;
-    c.getContext("2d").drawImage(im, 0, 0, nw, nh);
-
-    c.toBlob(b => {
-      let u = URL.createObjectURL(b);
-
-      document.getElementById("imgResult").innerHTML = `
-        Original: ${(f.size / 1024).toFixed(1)} KB<br>
-        New: ${(b.size / 1024).toFixed(1)} KB<br>
-        <a style="color:var(--gold)" href="${u}" download="nova-image.jpg">Download processed image</a>
-      `;
-
-      URL.revokeObjectURL(url);
-    }, "image/jpeg", q);
-  };
-
-  im.src = url;
-}
-
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  }[c]));
-}
-
-function makeInvoice() {
-  let b = document.getElementById("biz").value;
-  let c = document.getElementById("cust").value;
-  let i = document.getElementById("item").value;
-  let a = Number(document.getElementById("amt").value);
-
-  if (!b || !c || !i || !Number.isFinite(a) || a <= 0) {
-    return alert("Complete all fields with a valid amount.");
-  }
-
-  document.getElementById("invoiceOut").innerHTML = `
-    <div style="background:white;color:#222;padding:25px">
-      <h2>${esc(b)}</h2>
-      <h3>INVOICE</h3>
-      <p>Customer: ${esc(c)}</p>
-      <p>Item: ${esc(i)}</p>
-      <h2>PKR ${a.toLocaleString("en-PK")}</h2>
-    </div>
-    <button class="btn" onclick="window.print()">Print / Save PDF</button>
-  `;
-}
-
-function makeResume() {
-  let n = document.getElementById("rName").value;
-
-  if (!n) return alert("Enter your name.");
-
-  let e = document.getElementById("rEmail").value;
-  let r = document.getElementById("rRole").value;
-  let a = document.getElementById("rAbout").value;
-  let s = document.getElementById("rSkills").value;
-  let x = document.getElementById("rExp").value;
-
-  document.getElementById("resumeOut").innerHTML = `
-    <div style="background:white;color:#222;padding:25px">
-      <h1>${esc(n)}</h1>
-      <p>${esc(r)} | ${esc(e)}</p>
-      <hr>
-      <h3>PROFILE</h3>
-      <p>${esc(a)}</p>
-      <h3>SKILLS</h3>
-      <p>${esc(s)}</p>
-      <h3>EXPERIENCE & EDUCATION</h3>
-      <p>${esc(x)}</p>
-    </div>
-    <button class="btn" onclick="window.print()">Print / Save PDF</button>
-  `;
-}
-
-async function mergePDFs() {
-  let fs = [...document.getElementById("pdfFiles").files];
-
-  if (fs.length < 2) return alert("Choose at least two PDF files.");
-  if (!window.PDFLib) return alert("PDF library did not load. Check your internet.");
-
-  try {
-    let merged = await PDFLib.PDFDocument.create();
-
-    for (let f of fs) {
-      let doc = await PDFLib.PDFDocument.load(await f.arrayBuffer());
-      let pages = await merged.copyPages(doc, doc.getPageIndices());
-      pages.forEach(p => merged.addPage(p));
-    }
-
-    let bytes = await merged.save();
-    let blob = new Blob([bytes], {type: "application/pdf"});
-    let url = URL.createObjectURL(blob);
-
-    document.getElementById("pdfOut").innerHTML = `
-      Merged ${fs.length} PDF files successfully.
-      <a style="color:var(--gold)" href="${url}" download="nova-merged.pdf">Download merged PDF</a>
-    `;
-  } catch (e) {
-    document.getElementById("pdfOut").textContent =
-      "Could not merge these PDFs. Check that they are valid and not password-protected.";
-  }
-}
-
-function makeDesign(kind) {
-  let c = document.getElementById("designCanvas");
-  let ctx = c.getContext("2d");
-  let file = document.getElementById("designImage").files[0];
-  let title = document.getElementById("designTitle").value || "YOUR BIG IDEA";
-  let sub = document.getElementById("designSub").value || "Make it happen.";
-  let bg = document.getElementById("designColor").value;
-
-  c.width = kind === "thumbnail" ? 1280 : 1080;
-  c.height = kind === "thumbnail" ? 720 : 1080;
-
-  function draw(im) {
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, c.width, c.height);
-
-    if (im) {
-      ctx.globalAlpha = .42;
-
-      let scale = Math.max(c.width / im.width, c.height / im.height);
-
-      ctx.drawImage(
-        im,
-        (c.width - im.width * scale) / 2,
-        (c.height - im.height * scale) / 2,
-        im.width * scale,
-        im.height * scale
-      );
-
-      ctx.globalAlpha = 1;
-    }
-
-    ctx.fillStyle = "#0008";
-    ctx.fillRect(0, c.height * .55, c.width, c.height * .45);
-
-    ctx.fillStyle = "#f4d28e";
-    ctx.font = `900 ${kind === "thumbnail" ? 76 : 68}px Arial`;
-    ctx.textAlign = "center";
-
-    wrapText(
-      ctx,
-      title.toUpperCase(),
-      c.width / 2,
-      c.height * .72,
-      c.width * .86,
-      kind === "thumbnail" ? 88 : 82
-    );
-
-    ctx.fillStyle = "#fff";
-    ctx.font = "36px Arial";
-    ctx.fillText(sub, c.width / 2, c.height * .9);
-  }
-
-  if (file) {
-    let im = new Image();
-    im.onload = () => draw(im);
-    im.src = URL.createObjectURL(file);
-  } else {
-    draw(null);
-  }
-}
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  let words = text.split(" ");
-  let line = "";
-  let lines = [];
-
-  for (let w of words) {
-    let test = line + w + " ";
-
-    if (ctx.measureText(test).width > maxWidth && line) {
-      lines.push(line.trim());
-      line = w + " ";
+    if (mode === "toBinary") {
+      output = [...new TextEncoder().encode(input)]
+        .map(byte=>byte.toString(2).padStart(8,"0")).join(" ");
     } else {
-      line = test;
+      const bits = input.split(/\s+/);
+      if (!bits.every(bit=>/^[01]{8}$/.test(bit))) throw new Error();
+      output = new TextDecoder().decode(new Uint8Array(bits.map(bit=>parseInt(bit,2))));
     }
+
+    result("binaryResult",`
+      <p>${escapeHTML(output)}</p>
+      <button onclick="copyText(${JSON.stringify(output).replace(/</g,"\\u003c")})">Copy Result</button>
+    `);
+  } catch(error) {
+    result("binaryResult","<p>Invalid binary input. Use groups of 8 bits.</p>");
+  }
+}
+
+function createPlanner() {
+  const name = $("planName").value;
+  const platform = $("planPlatform").value;
+  const days = Math.min(30,Math.max(1,Number($("planDays").value)||7));
+  const topic = $("planTopic").value;
+
+  const formats = ["Educational post","Behind-the-scenes","Customer question","Product showcase","Quick tip","Story poll","Weekly recap"];
+
+  const output = Array.from({length:days},(_,index)=>
+    `Day ${index+1}: ${formats[index%formats.length]} — ${topic}`
+  ).join("\n");
+
+  result("plannerResult",`
+    <p><b>${escapeHTML(name)} — ${escapeHTML(platform)}</b></p>
+    <pre>${escapeHTML(output)}</pre>
+    <button onclick="copyText(${JSON.stringify(output).replace(/</g,"\\u003c")})">Copy Plan</button>
+  `);
+}
+
+function createListing() {
+  const name = $("productName").value.trim();
+  const features = $("productFeatures").value.trim();
+  const audience = $("productAudience").value.trim();
+  const tone = $("productTone").value;
+
+  if (!name) return alert("Enter a product name.");
+
+  const output = `${name}\n\nDiscover ${name}, designed for ${audience || "everyday use"}.\n\nKey features:\n${features}\n\nStyle: ${tone}\n\nContact us to learn more.`;
+
+  result("listingResult",`
+    <p>${escapeHTML(output)}</p>
+    <button onclick="copyText(${JSON.stringify(output).replace(/</g,"\\u003c")})">Copy Listing</button>
+  `);
+}
+
+function calculateProfit() {
+  const cost = Number($("profitCost").value);
+  const sell = Number($("profitSell").value);
+
+  if (cost < 0 || sell < 0 || cost === 0) {
+    return alert("Enter valid positive prices.");
   }
 
-  if (line) lines.push(line.trim());
+  const profit = sell-cost;
+  const margin = profit/sell*100;
+  const markup = profit/cost*100;
 
-  lines.slice(0, 3).forEach((l, i) => {
-    ctx.fillText(l, x, y + i * lineHeight);
-  });
+  result("profitResult",`
+    <p>Profit: <b>${money(profit)}</b></p>
+    <p>Profit margin: <b>${Number.isFinite(margin)?margin.toFixed(2):"N/A"}%</b></p>
+    <p>Markup: <b>${markup.toFixed(2)}%</b></p>
+  `);
 }
 
-function downloadDesign() {
-  let c = document.getElementById("designCanvas");
+function createCaptions() {
+  const topic = $("captionTopic").value.trim();
+  const platform = $("captionPlatform").value;
+  const style = $("captionStyle").value;
 
-  if (!c.width) return alert("Create a design first.");
+  if (!topic) return alert("Enter a topic first.");
 
-  let a = document.createElement("a");
-  a.href = c.toDataURL("image/png");
-  a.download = "nova-design.png";
-  a.click();
+  const ideas = [
+    `Discover something different with ${topic}.`,
+    `A little more quality. A little more ${topic}.`,
+    `Made to stand out. Explore ${topic} today.`,
+    `Your next favourite might be ${topic}.`
+  ];
+
+  const output = `${platform} — ${style}\n\n`+
+    ideas.map((idea,index)=>(index+1)+". "+idea).join("\n\n");
+
+  result("captionResult",`
+    <pre>${escapeHTML(output)}</pre>
+    <button onclick="copyText(${JSON.stringify(output).replace(/</g,"\\u003c")})">Copy Ideas</button>
+  `);
 }
 
-function analyzeSEO() {
-  let s = document.getElementById("seoSource").value;
-
-  if (!s.trim()) return alert("Paste page HTML source.");
-
-  let d = new DOMParser().parseFromString(s, "text/html");
-  let title = d.querySelector("title")?.textContent || "";
-  let desc = d.querySelector('meta[name="description"]')?.content || "";
-  let h1 = d.querySelectorAll("h1").length;
-  let imgs = d.querySelectorAll("img");
-  let missing = [...imgs].filter(x => !x.getAttribute("alt")).length;
-
-  document.getElementById("seoOut").textContent =
-    `Title: ${title || "MISSING"} (${title.length} characters)
-Meta description: ${desc || "MISSING"} (${desc.length} characters)
-H1 headings: ${h1}
-Images without alt text: ${missing}
-
-This is a basic source check, not a full SEO audit or search-engine ranking prediction.`;
+function copyText(text) {
+  navigator.clipboard?.writeText(String(text))
+    .then(()=>alert("Copied!"))
+    .catch(()=>alert("Copy not available. Please select and copy the text."));
 }
 
-function makeFavicon() {
-  let c = document.getElementById("favCanvas");
-  let x = c.getContext("2d");
-  let bg = document.getElementById("favBg").value;
-  let fg = document.getElementById("favFg").value;
-  let t = document.getElementById("favText").value || "N";
+/* Basic frontend account interface.
+   This is not secure authentication; use a backend before handling real accounts.
+*/
 
-  x.clearRect(0, 0, 256, 256);
-  x.fillStyle = bg;
-  x.beginPath();
-  x.roundRect(0, 0, 256, 256, 48);
-  x.fill();
-
-  x.fillStyle = fg;
-  x.font = "bold 145px Arial";
-  x.textAlign = "center";
-  x.textBaseline = "middle";
-  x.fillText(t, 128, 132);
+function showAccount() {
+  openModal("My Account",`
+    <p>Create a local browser profile or sign in on this device.</p>
+    ${field("Email","accountEmail","you@example.com","email")}
+    ${field("Password","accountPassword","Password","password")}
+    <button onclick="registerAccount()">Create Account</button>
+    <button onclick="loginAccount()">Login</button>
+    <div id="accountMessage"></div>
+    <p>Accounts created here are stored only in this browser. This is not secure authentication.</p>
+  `);
 }
 
-function downloadFavicon() {
-  let a = document.createElement("a");
-  a.href = document.getElementById("favCanvas").toDataURL();
-  a.download = "nova-favicon.png";
-  a.click();
+function openModal(title,content) {
+  $("modalTitle").textContent = title;
+  $("modalContent").innerHTML = content;
+  $("modal").classList.add("show");
 }
 
-renderTools();
+function closeModal() {
+  $("modal").classList.remove("show");
+}
+
+function getAccounts() {
+  try {
+    return JSON.parse(localStorage.getItem("novaAccounts")||"[]");
+  } catch {
+    return [];
+  }
+}
+
+function registerAccount() {
+  const email = $("accountEmail").value.trim().toLowerCase();
+  const password = $("accountPassword").value;
+
+  if (!email || password.length < 8) {
+    return result("accountMessage","<p>Enter a valid email and password with at least 8 characters.</p>");
+  }
+
+  const accounts = getAccounts();
+  if (accounts.some(account=>account.email===email)) {
+    return result("accountMessage","<p>This email already has an account. Please login.</p>");
+  }
+
+  accounts.push({email,password});
+  localStorage.setItem("novaAccounts",JSON.stringify(accounts));
+  result("accountMessage","<p>Browser profile created. Please login.</p>");
+}
+
+function loginAccount() {
+  const email = $("accountEmail").value.trim().toLowerCase();
+  const password = $("accountPassword").value;
+  const account = getAccounts().find(item=>item.email===email && item.password===password);
+
+  if (!account) return result("accountMessage","<p>Email or password is incorrect.</p>");
+
+  localStorage.setItem("novaLoggedIn",email);
+  result("accountMessage","<p>Logged in on this browser as "+escapeHTML(email)+".</p>");
+}
+
+/* Manual payment request.
+   Never mark a payment as verified from a browser-only form.
+*/
+
+function paymentRequest(toolId) {
+  const tool = tools.find(item=>item.id===toolId);
+  if (!tool) return;
+
+  openModal("Payment Instructions",`
+    <p><b>${escapeHTML(tool.name)}</b> — ${money(tool.price)}</p>
+    <p>Easypaisa: <b>03420604105</b></p>
+    <p>JazzCash: <b>03174453242</b></p>
+    <p>Account name: <b>NOVA AI</b></p>
+    ${field("Your name","payName","Full name")}
+    ${field("Your email","payEmail","Email address","email")}
+    ${field("Transaction ID","payTransaction","Payment reference")}
+    <button onclick="sendPaymentRequest('${tool.id}')">Send Payment Request</button>
+    <p>Access is provided only after the payment is manually checked.</p>
+  `);
+}
+
+function sendPaymentRequest(toolId) {
+  const tool = tools.find(item=>item.id===toolId);
+  const name = $("payName").value.trim();
+  const email = $("payEmail").value.trim();
+  const transaction = $("payTransaction").value.trim();
+
+  if (!name || !email || !transaction) {
+    return alert("Complete all payment request fields.");
+  }
+
+  const message =
+    `NOVA AI PAYMENT REQUEST\n`+
+    `Tool: ${tool.name}\n`+
+    `Amount: ${money(tool.price)}\n`+
+    `Name: ${name}\n`+
+    `Email: ${email}\n`+
+    `Transaction ID: ${transaction}`;
+
+  window.open("https://wa.me/923471016620?text="+encodeURIComponent(message),"_blank");
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  $("year").textContent = new Date().getFullYear();
+  renderCategories();
+  renderTools();
+  showColor;
+});
