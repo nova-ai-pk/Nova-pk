@@ -2,6 +2,8 @@
 
 /* NOVA AI — Frontend Tool Engine */
 
+const PAYMENT_QR_URL = "https://raw.githubusercontent.com/nova-ai-pk/Nova-pk/b3bda88ed06a5c5bea75df6684e7f534f504c912/payment-qr.jpeg.jpeg";
+
 const tools = [
   {id:"qr",name:"QR Code Generator",icon:"▦",category:"Business",price:799,desc:"Create QR codes from links or text.",kind:"qr"},
   {id:"barcode",name:"Barcode Generator",icon:"▥",category:"Business",price:699,desc:"Generate printable barcodes.",kind:"barcode"},
@@ -599,10 +601,14 @@ function paymentRequest(toolId) {
       <h2>${money(tool.price)}</h2>
 
       <img
-        src="payment-qr.jpeg.jpeg"
+        src="${PAYMENT_QR_URL}"
         alt="NOVA AI Payment QR"
         style="width:230px;max-width:100%;display:block;margin:20px auto;background:white;padding:10px;border-radius:12px"
+        onerror="this.style.display='none';document.getElementById('qrLoadError').style.display='block';"
       >
+      <p id="qrLoadError" style="display:none;color:#d9534f">
+        QR image could not load. Please use the account details below.
+      </p>
 
       <p><b>Account Name:</b> NOVA AI</p>
       <p><b>Easypaisa:</b> 03420604105</p>
@@ -615,7 +621,7 @@ function paymentRequest(toolId) {
       </button>
 
       <p style="font-size:12px">
-        Payment is not automatically verified. Keep your transaction receipt.
+        Your TID is recorded in this browser only. Payment is not automatically verified.
       </p>
     </div>
   `);
@@ -631,7 +637,13 @@ function sendPaymentRequest(toolId) {
     return alert("Please enter your Transaction ID.");
   }
 
-  const requests=JSON.parse(localStorage.getItem("novaPaymentRequests")||"[]");
+  let requests=[];
+  try {
+    requests=JSON.parse(localStorage.getItem("novaPaymentRequests")||"[]");
+    if(!Array.isArray(requests)) requests=[];
+  } catch {
+    requests=[];
+  }
 
   requests.push({
     toolId:tool.id,
@@ -652,5 +664,4 @@ document.addEventListener("DOMContentLoaded",()=>{
   $("year").textContent=new Date().getFullYear();
   renderCategories();
   renderTools();
-  showColor;
 });
